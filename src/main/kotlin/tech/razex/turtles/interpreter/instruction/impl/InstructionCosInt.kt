@@ -8,13 +8,13 @@ import tech.razex.turtles.util.Type.*
 import kotlin.math.cos
 import kotlin.math.sin
 
-@Arguments(types = [STRING, INT])
+@Arguments(types = [STRING, INT, INT])
 @Instruction(name = "cosint", aliases = ["cosi"])
 class InstructionCosInt : AbstractInstruction() {
 
     override fun execute(interpreter: Interpreter, args: Array<Any>) {
         if(interpreter.allocatedInts[args[0] as String] != null) {
-            interpreter.allocatedInts[args[0] as String] = (cos(args[1] as Double) * 2).toInt()
+            interpreter.allocatedInts[args[0] as String] = (cos(Math.toDegrees((args[1] as Int).toDouble())) * args[2] as Int).toInt()
         }
     }
 
