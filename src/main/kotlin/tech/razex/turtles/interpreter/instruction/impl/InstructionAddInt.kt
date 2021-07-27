@@ -4,14 +4,16 @@ import tech.razex.turtles.interpreter.Interpreter
 import tech.razex.turtles.interpreter.instruction.Arguments
 import tech.razex.turtles.interpreter.instruction.Instruction
 import tech.razex.turtles.interpreter.instruction.AbstractInstruction
-import tech.razex.turtles.util.Type.INT
+import tech.razex.turtles.util.Type.*
 
-@Arguments(types = [ INT, INT ])
-@Instruction(name = "canvas", aliases = ["cv"])
-class InstructionCanvas : AbstractInstruction() {
+@Arguments(types = [STRING, INT])
+@Instruction(name = "addint", aliases = ["addi"])
+class InstructionAddInt : AbstractInstruction() {
 
     override fun execute(interpreter: Interpreter, args: Array<Any>) {
-        interpreter.canvasData = Array(args[0] as Int) { IntArray(args[1] as Int) }
+        if(interpreter.allocatedInts[args[0] as String] != null) {
+            interpreter.allocatedInts[args[0] as String] = interpreter.allocatedInts[args[0] as String]!! + args[1] as Int
+        }
     }
 
 }

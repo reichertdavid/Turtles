@@ -2,9 +2,9 @@ package tech.razex.turtles.interpreter.instruction
 
 import tech.razex.turtles.interpreter.Interpreter
 
-interface IInstruction {
+abstract class AbstractInstruction {
 
-    fun execute(interpreter: Interpreter, args: Array<Any>)
+    abstract fun execute(interpreter: Interpreter, args: Array<Any>)
 
     fun getName() = this.javaClass.getAnnotation(Instruction::class.java).name
     fun getAliases() = this.javaClass.getAnnotation(Instruction::class.java).aliases

@@ -4,14 +4,14 @@ import tech.razex.turtles.interpreter.Interpreter
 import tech.razex.turtles.interpreter.instruction.Arguments
 import tech.razex.turtles.interpreter.instruction.Instruction
 import tech.razex.turtles.interpreter.instruction.AbstractInstruction
-import tech.razex.turtles.util.Type.INT
+import tech.razex.turtles.util.Type.*
+import kotlin.math.sin
 
-@Arguments(types = [ INT, INT ])
-@Instruction(name = "canvas", aliases = ["cv"])
-class InstructionCanvas : AbstractInstruction() {
+@Instruction(name = "printspace", aliases = ["space"])
+class InstructionPrintSpace : AbstractInstruction() {
 
     override fun execute(interpreter: Interpreter, args: Array<Any>) {
-        interpreter.canvasData = Array(args[0] as Int) { IntArray(args[1] as Int) }
+        print(" ")
     }
 
 }
