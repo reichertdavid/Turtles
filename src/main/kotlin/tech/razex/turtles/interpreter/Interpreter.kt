@@ -1,5 +1,6 @@
 package tech.razex.turtles.interpreter
 
+import tech.razex.turtles.interpreter.exceptions.InstructionAllocatedValueNotFoundException
 import tech.razex.turtles.interpreter.exceptions.InstructionNotFoundException
 import tech.razex.turtles.interpreter.exceptions.InstructionArgumentException
 import tech.razex.turtles.interpreter.exceptions.InstructionUnexpectedException
@@ -23,6 +24,7 @@ class Interpreter(val file: File) {
         InstructionSetColor(),
         InstructionPush(),
         InstructionPop(),
+        InstructionAllocInt(),
         InstructionFinish()
     )
 
@@ -30,6 +32,11 @@ class Interpreter(val file: File) {
      * contains all pixel data of our canvas
      */
     lateinit var canvasData: Array<IntArray>
+
+    /**
+     * This will safe all allocated ints by the given file
+     */
+    val allocatedInts = mutableMapOf<String, Int>()
 
     /**
      * its the current position where our "turtle" is
@@ -55,13 +62,15 @@ class Interpreter(val file: File) {
      * Start to interpret all instructions contained in source file
      */
     fun interpret() {
-        val instructions = this.file.readLines()
+        var instructions = this.file.readLines()
 
         instructions.forEachIndexed { index, inst ->
+            if(inst.isNullOrBlank()) return@forEachIndexed
+
             currentLine = index
             val interpretable = inst.split(" ")
             val instName = interpretable[0]
-            val arguments = interpretable.drop(1)
+            val arguments = interpretable.drop(1).toTypedArray()
 
             // get argument types to assert everything is at right place
             val argumentTypes = mutableListOf<Type>()
@@ -69,6 +78,7 @@ class Interpreter(val file: File) {
                 when {
                     s.matches("-?\\d+?".toRegex()) -> argumentTypes.add(Type.INT)
                     s.matches("0[xX][0-9a-fA-F]+".toRegex()) -> argumentTypes.add(Type.INT)
+                    s.startsWith("i\$") -> argumentTypes.add(Type.INT)
                     s.matches("-?\\d+(\\.\\d+)?".toRegex()) -> argumentTypes.add(Type.DECIMAL)
                     else -> argumentTypes.add(Type.STRING)
                 }
@@ -94,6 +104,15 @@ class Interpreter(val file: File) {
                     when(type) {
                         Type.INT -> {
                             try {
+                                if(arguments[index].startsWith("i\$")) {
+                                    if(this.allocatedInts[arguments[index].drop(2)] != null) {
+                                        castedArguments[index] = this.allocatedInts[arguments[index].drop(2)]!!
+                                        return@forEachIndexed
+                                    } else {
+                                        throw InstructionAllocatedValueNotFoundException("Could not interpret Instruction ${instObj.getName().uppercase()} on line ${index + 1}. Allocated value with name ${arguments[index].drop(2).uppercase()} was not found")
+                                    }
+                                }
+
                                 castedArguments[index] = arguments[index].toInt()
                             } catch(e: Exception) {
                                 castedArguments[index] = Integer.decode(arguments[index])
