@@ -11,9 +11,6 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-/**
- * This instructions stops everything and finally creates the image
- */
 @Instruction(name = "pop", aliases = [])
 class InstructionPop : IInstruction {
 

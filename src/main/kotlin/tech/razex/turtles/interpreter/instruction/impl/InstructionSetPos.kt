@@ -21,12 +21,12 @@ class InstructionSetPos : IInstruction {
     override fun execute(interpreter: Interpreter, args: Array<Any>) {
         val x = args[0] as Int
         val y = args[1] as Int
-        val width = interpreter.canvasData.size
-        val height = interpreter.canvasData[0].size
+        val width = interpreter.canvasData.size - 1
+        val height = interpreter.canvasData[0].size - 1
 
         if(x < 0 || x > width ||
             y < 0 || y > height) {
-            throw InstructionOutOfCanvasException("Turtle position went outside of canvas! Position is [$x, $y] but canvas is [$width, $height]")
+            throw InstructionOutOfCanvasException("Turtle position went outside of canvas (line: ${interpreter.currentLine})! Position is [$x, $y] but canvas maximum is [$width, $height]")
         }
         interpreter.position = Point(args[0] as Int, args[1] as Int)
     }

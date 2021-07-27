@@ -25,6 +25,7 @@ class Interpreter(val file: File) {
         InstructionPush(),
         InstructionPop(),
         InstructionAllocInt(),
+        InstructionForward(),
         InstructionFinish()
     )
 

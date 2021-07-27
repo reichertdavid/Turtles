@@ -9,9 +9,7 @@ import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
 
-/**
- * This instructions stops everything and finally creates the image
- */
+
 @Arguments(types = [Type.INT])
 @Instruction(name = "setcolor", aliases = ["color", "col"])
 class InstructionSetColor : IInstruction {
